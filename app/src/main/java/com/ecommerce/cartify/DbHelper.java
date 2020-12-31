@@ -5,9 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.ecommerce.cartify.Helpers.GmailSender;
 import com.ecommerce.cartify.Models.Customer;
 
 import java.util.Date;
@@ -81,6 +83,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         boolean result = true;
         Cursor customer;
+
         cartifyDB = getReadableDatabase();
         if(emailOrUsername.contains("@"))
             customer = cartifyDB.rawQuery("SELECT * FROM customers WHERE email=? AND password=?",
@@ -97,6 +100,37 @@ public class DbHelper extends SQLiteOpenHelper {
         return result;
     }
 
+    public boolean resetPassword(String custEmail){
+        // Check Email validity
+        cartifyDB = getReadableDatabase();
+        Cursor password = cartifyDB.rawQuery("SELECT password FROM customers WHERE email=?", new String[]{custEmail});
 
+        password.moveToFirst();
+        if(password.getCount() == 0){
+            password.close();
+            cartifyDB.close();
+            return false;
+        }
+
+        // Send Email
+        String emailSender = "cartify.ecommerce.app@gmail.com";
+        String emailPassword = "Cartifyapp";
+        String emailSubject = "Cartify Password";
+        String emailBody = "Your password is: " + password.getString(0);
+        try {
+            GmailSender sender = new GmailSender(emailSender, emailPassword);
+            sender.sendMail(
+                    emailSubject,
+                    emailBody,
+                    emailSender,
+                    custEmail);
+        } catch (Exception e) {
+            Log.e("SendMail", e.getMessage(), e);
+        }
+
+        password.close();
+        cartifyDB.close();
+        return true;
+    }
 
 }

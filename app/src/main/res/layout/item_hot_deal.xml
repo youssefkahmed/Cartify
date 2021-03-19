@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/hot_deal_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:elevation="100dp"
+    >
+
+    <!-- Hot Deal Image -->
+    <ImageView
+        android:id="@+id/hot_deal_image"
+        android:layout_width="@dimen/hot_deal_image_width"
+        android:layout_height="@dimen/hot_deal_image_height"
+        android:layout_marginTop="30dp"
+        android:scaleType="fitXY"/>
+
+    <!-- Hot Deal Name -->
+    <TextView
+        android:id="@+id/hot_deal_name"
+        android:layout_width="@dimen/hot_deal_image_width"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/hot_deal_image"
+        android:layout_alignTop="@+id/hot_deal_image"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="7dp"
+        android:text="PLACEHOLDER"
+        android:textSize="18sp" />
+
+    <!-- Hot Deal Price -->
+    <TextView
+        android:id="@+id/hot_deal_seller"
+        android:layout_width="@dimen/hot_deal_image_width"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/hot_deal_image"
+        android:layout_toEndOf="@+id/hot_deal_image"
+        android:layout_below="@+id/hot_deal_name"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="2dp"
+        android:text="PLACEHOLDER"
+        android:textColor="#e18417"
+        android:textSize="14sp"
+        />
+
+    <!-- Hot Deal Price -->
+    <TextView
+        android:id="@+id/hot_deal_price"
+        android:layout_width="@dimen/hot_deal_image_width"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/hot_deal_image"
+        android:layout_toEndOf="@+id/hot_deal_image"
+        android:layout_below="@+id/hot_deal_seller"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:text="PLACEHOLDER"
+        android:textSize="14sp"
+         />
+
+</RelativeLayout>
+
+

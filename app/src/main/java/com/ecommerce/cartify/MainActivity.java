@@ -1,8 +1,10 @@
 package com.ecommerce.cartify;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,10 +18,27 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ecommerce.cartify.Helpers.FirebaseHelper;
+import com.ecommerce.cartify.Models.Customer;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class MainActivity extends AppCompatActivity {
 
     // Db Access var
     final DbHelper dbHelper = new DbHelper(this);
+    final FirebaseHelper fbHelper = new FirebaseHelper();
+
+    // View Variables
+    EditText usernameTxt;
+    EditText passwordTxt;
+    TextView registerTxt;
+    TextView forgotPassTxt;
+    Button loginBtn;
+    CheckBox rememberMeCB;
 
     // Shared Preferences vars
     public static final String PREFS_NAME = "CartifyPrefs";
@@ -44,12 +63,12 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
         // Grabbing View Items
-        EditText usernameTxt = (EditText)findViewById(R.id.login_username_txt);
-        EditText passwordTxt = (EditText)findViewById(R.id.login_password_txt);
-        TextView registerTxt = (TextView)findViewById(R.id.register_txt);
-        TextView forgotPassTxt = (TextView)findViewById(R.id.forgot_pwd_txt);
-        Button loginBtn = (Button)findViewById(R.id.login_btn);
-        CheckBox rememberMeCB = (CheckBox)findViewById(R.id.remember_me_checkBox);
+        usernameTxt = (EditText)findViewById(R.id.login_username_txt);
+        passwordTxt = (EditText)findViewById(R.id.login_password_txt);
+        registerTxt = (TextView)findViewById(R.id.register_txt);
+        forgotPassTxt = (TextView)findViewById(R.id.forgot_pwd_txt);
+        loginBtn = (Button)findViewById(R.id.login_btn);
+        rememberMeCB = (CheckBox)findViewById(R.id.remember_me_checkBox);
 
         // Adding OnClick Listeners
             // Logging In
@@ -60,26 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 String username = usernameTxt.getText().toString();
                 String password =  passwordTxt.getText().toString();
 
-                boolean login = dbHelper.checkLogin(username, password);
-                if(login) {
-                    // Setting up intent
-                    Intent i = new Intent(getApplicationContext(), HomepageActivity.class);
-                    i.putExtra("username", username);
-
-                    // Setting up Shared Preferences
-                    if(rememberMeCB.isChecked()){
-                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                                .edit()
-                                .putString(PREF_USERNAME, username)
-                                .putString(PREF_PASSWORD, password)
-                                .apply();
-                    }
-
-                    finish();
-                    startActivity(i);
-                }
-                else
-                    Toast.makeText(MainActivity.this, "NOT Logged In Successfully", Toast.LENGTH_SHORT).show();
+                checkLogin(username, password);
             }
         });
 
@@ -97,12 +97,10 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
 
                                 String custEmail = ((EditText)builderView.findViewById(R.id.forgotPass_email_txt)).getText().toString();
-                                boolean result = dbHelper.resetPassword(custEmail);
+                                boolean result = dbHelper.resetPassword(custEmail, MainActivity.this);
 
                                 if(!result)
                                     Toast.makeText(getApplicationContext(), "Invalid Email", Toast.LENGTH_SHORT).show();
-                                else
-                                    Toast.makeText(getApplicationContext(), "Check Your Email!", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -120,8 +118,67 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
+                finish();
                 startActivity(i);
             }
+        });
+    }
+
+
+    // Helper Functions
+    public void checkLogin(String username, String password){
+
+        // Adding loading bar
+        ProgressDialog loadingBar = new ProgressDialog(this);
+        loadingBar.setTitle("Logging In");
+        loadingBar.setMessage("Please wait while you're being logged in.");
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.show();
+
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("customers");
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                Customer customer = null;
+                if(snapshot.child(username).exists())
+                    customer = snapshot.child(username).getValue(Customer.class);
+
+                if(username.equals("") || customer == null){
+                    loadingBar.dismiss();
+                    Toast.makeText(MainActivity.this, "This Username Does Not Exist!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(!customer.getPassword().equals(password)) {
+                    loadingBar.dismiss();
+                    Toast.makeText(MainActivity.this, "Password Is Incorrect!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Intent i = new Intent(getApplicationContext(), HomepageActivity.class);
+                i.putExtra("username", username);
+
+                // Setting up Shared Preferences
+                if(rememberMeCB.isChecked()){
+                    getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                            .edit()
+                            .putString(PREF_USERNAME, username)
+                            .putString(PREF_PASSWORD, password)
+                            .apply();
+                }
+
+                loadingBar.dismiss();
+                finish();
+                startActivity(i);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
         });
     }
 }

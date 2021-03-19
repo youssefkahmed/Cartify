@@ -117,7 +117,7 @@
             android:layout_marginRight="50dp"
             android:ems="10"
             android:fontFamily="@font/gtwalsheimpro_regular"
-            android:hint="Name"
+            android:hint="Username"
             android:inputType="textPersonName"
             android:textColor="#FF9800"
             android:textColorLink="#FFFFFF"

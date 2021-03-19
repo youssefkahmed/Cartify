@@ -1,29 +1,63 @@
 package com.ecommerce.cartify;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ecommerce.cartify.Helpers.FirebaseHelper;
 import com.ecommerce.cartify.Models.Customer;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    // View Variables
+    EditText nameTxt;
+    EditText usernameTxt;
+    EditText emailTxt;
+    EditText passwordTxt;
+    EditText birthdateTxt;
+    EditText jobTxt;
+    RadioGroup genderRadio;
+    Button registerBtn;
+    TextView loginTxt;
+
+    // Customer Variables
     String name, username, email, password,  gender, birthDate, job;
     final Calendar myCalendar = Calendar.getInstance();
-    final DbHelper dbHelper = new DbHelper(this);
+
+    // SQLiteOpenHelper Database
+    //final DbHelper dbHelper = new DbHelper(this);
+
+    // Firebase Database
+    final FirebaseHelper fbHelper = new FirebaseHelper();
+
+    public RegisterActivity() throws IOException {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +65,15 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         // Grabbing View Items
-        EditText nameTxt = (EditText)findViewById(R.id.name_txt);
-        EditText usernameTxt = (EditText)findViewById(R.id.username_txt);
-        EditText emailTxt = (EditText)findViewById(R.id.email_txt);
-        EditText passwordTxt = (EditText)findViewById(R.id.password_txt);
-        EditText birthdateTxt = (EditText)findViewById(R.id.birthdate_txt);
-        EditText jobTxt = (EditText)findViewById(R.id.job_txt);
-        RadioGroup genderRadio = (RadioGroup)findViewById(R.id.gender_radio_group);
-        Button registerBtn = (Button)findViewById(R.id.register_btn);
-        TextView loginTxt = (TextView)findViewById(R.id.login_txt);
+        nameTxt = (EditText)findViewById(R.id.name_txt);
+        usernameTxt = (EditText)findViewById(R.id.username_txt);
+        emailTxt = (EditText)findViewById(R.id.email_txt);
+        passwordTxt = (EditText)findViewById(R.id.password_txt);
+        birthdateTxt = (EditText)findViewById(R.id.birthdate_txt);
+        jobTxt = (EditText)findViewById(R.id.job_txt);
+        genderRadio = (RadioGroup)findViewById(R.id.gender_radio_group);
+        registerBtn = (Button)findViewById(R.id.register_btn);
+        loginTxt = (TextView)findViewById(R.id.login_txt);
 
         // Adding OnClick Listeners
             // Building Date Picker
@@ -74,18 +108,15 @@ public class RegisterActivity extends AppCompatActivity {
                 gender = genderRadio.getCheckedRadioButtonId() == R.id.male_radio_btn ? "Male" : "Female";
                 job = jobTxt.getText().toString();
 
+                if(name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty() ||
+                        birthDate.isEmpty() || gender.isEmpty() || job.isEmpty())
+                {
+                    Toast.makeText(getApplicationContext(), "Please Fill All Required Fields!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Customer customer = new Customer(name, username, email, password, gender, birthDate, job);
-                dbHelper.registerCustomer(customer);
-
-                nameTxt.setText("");
-                usernameTxt.setText("");
-                emailTxt.setText("");
-                passwordTxt.setText("");
-                birthdateTxt.setText("");
-                genderRadio.clearCheck();
-                jobTxt.setText("");
-
-                Toast.makeText(getApplicationContext(), "Customer Registered Successfully!", Toast.LENGTH_SHORT).show();
+                registerCustomer(customer);
             }
         });
 
@@ -103,5 +134,70 @@ public class RegisterActivity extends AppCompatActivity {
         EditText birthdateTxt = (EditText)findViewById(R.id.birthdate_txt);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         birthdateTxt.setText(sdf.format(myCalendar.getTime()));
+    }
+
+    private void registerCustomer(Customer customer){
+
+        // Adding loading bar
+        ProgressDialog loadingBar = new ProgressDialog(this);
+        loadingBar.setTitle("Register Account");
+        loadingBar.setMessage("Please wait while your account is being registered");
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.show();
+
+
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("customers");
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.child(customer.getUsername()).exists()){
+                    HashMap<String, Object> custMap = new HashMap<>();
+
+                    custMap.put("cust_name", customer.getName());
+                    custMap.put("username", customer.getUsername());
+                    custMap.put("email", customer.getEmail());
+                    custMap.put("password", customer.getPassword());
+                    custMap.put("gender", customer.getGender());
+                    custMap.put("birth_date", customer.getBirthDate());
+                    custMap.put("job", customer.getJob());
+
+                    dbRef.child(customer.getUsername()).setValue(custMap)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    nameTxt.setText("");
+                                    usernameTxt.setText("");
+                                    emailTxt.setText("");
+                                    passwordTxt.setText("");
+                                    birthdateTxt.setText("");
+                                    genderRadio.clearCheck();
+                                    jobTxt.setText("");
+
+                                    loadingBar.dismiss();
+                                    Toast.makeText(getApplicationContext(), "You've Been Registered Successfully!", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    loadingBar.dismiss();
+                                    Toast.makeText(getApplicationContext(), "Connection Error!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+
+                else{
+                    loadingBar.dismiss();
+                    Toast.makeText(getApplicationContext(), "Username Has To Be Unique!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                loadingBar.dismiss();
+                Toast.makeText(getApplicationContext(), "Error: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -10,10 +10,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.ecommerce.cartify.Fragments.ProductFrag;
 import com.ecommerce.cartify.Helpers.MyGlideApp;
+import com.ecommerce.cartify.Models.Product;
 import com.ecommerce.cartify.R;
 
 import java.util.ArrayList;
@@ -21,13 +24,13 @@ import java.util.ArrayList;
 public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.OffersViewHolder>{
 
     private Context mContext;
-    private ArrayList<String> mOfferNames = new ArrayList<>();
-    private ArrayList<String> mOfferImages = new ArrayList<>();
+    private ArrayList<Product> mOffers;
+    private FragmentManager mFragmentManager;
 
-    public OffersAdapter(Context mContext, ArrayList<String> mOfferNames, ArrayList<String> mOfferImages) {
+    public OffersAdapter(Context mContext, ArrayList<Product> mOffers, FragmentManager mFragmentManager) {
         this.mContext = mContext;
-        this.mOfferNames = mOfferNames;
-        this.mOfferImages = mOfferImages;
+        this.mOffers = mOffers;
+        this.mFragmentManager = mFragmentManager;
     }
 
     @NonNull
@@ -43,16 +46,19 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.OffersView
 
         Glide.with(mContext)
                 .asBitmap()
-                .load(mOfferImages.get(position))
+                .load(mOffers.get(position).getImage_url())
                 .error(R.mipmap.ic_launcher)
                 .into(holder.offerImage);
 
-        holder.offerName.setText(mOfferNames.get(position));
+        holder.offerName.setText(mOffers.get(position).getProd_name());
 
         holder.offerParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, mOfferNames.get(position), Toast.LENGTH_SHORT).show();
+                int productId = mOffers.get(position).getProd_id();
+                mFragmentManager
+                        .beginTransaction().replace(R.id.homepage_frame, new ProductFrag(productId))
+                        .commit();
             }
         });
 
@@ -60,7 +66,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.OffersView
 
     @Override
     public int getItemCount() {
-        return mOfferNames.size();
+        return mOffers.size();
     }
 
 

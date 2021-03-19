@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/offer_parent"
-    android:layout_width="186dp"
+    android:id="@+id/category_parent"
+    android:layout_width="160dp"
     android:layout_height="wrap_content"
     android:elevation="100dp">
 
+    <!-- Category Image -->
     <ImageView
-        android:id="@+id/offer_image"
-        android:layout_width="@dimen/offer_image_width"
-        android:layout_height="@dimen/offer_image_height"
-        android:layout_marginTop="15dp"
+        android:id="@+id/category_image"
+        android:layout_width="@dimen/category_image_width"
+        android:layout_height="@dimen/category_image_height"
+        android:layout_marginTop="30dp"
         android:scaleType="fitXY"/>
 
+    <!-- Category Name -->
     <TextView
-        android:id="@+id/offer_name"
-        android:layout_width="@dimen/offer_image_width"
+        android:id="@+id/category_name"
+        android:layout_width="@dimen/category_image_width"
         android:layout_height="20dp"
-        android:layout_below="@+id/offer_image"
+        android:layout_below="@+id/category_image"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="7dp"

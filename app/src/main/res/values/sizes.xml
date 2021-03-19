@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sizes for Navigation Bar Icons -->
+    <dimen name="icon_size">45dp</dimen>
+    <dimen name="icon_vert_margin">12dp</dimen>
+
+    <!-- Sizes for Latest Offers Images -->
+    <dimen name="offer_image_height">145dp</dimen>
+    <dimen name="offer_image_width">166dp</dimen>
+
+    <!-- Sizes for Category Images -->
+    <dimen name="category_image_height">110dp</dimen>
+    <dimen name="category_image_width">125dp</dimen>
+
+    <!-- Sizes for Hot Deal Images -->
+    <dimen name="hot_deal_image_height">110dp</dimen>
+    <dimen name="hot_deal_image_width">125dp</dimen>
+
+    <!-- Size for Search Icon -->
+    <dimen name="icon_search_size">40dp</dimen>
+
+    <!-- Sizes for ٍSearched Products Images -->
+    <dimen name="search_product_image_height">160dp</dimen>
+    <dimen name="search_product_image_width">160dp</dimen>
+
+    <!-- Sizes for Product Page Image -->
+    <dimen name="product_image_height">250dp</dimen>
+    <dimen name="product_image_width">250dp</dimen>
+
+</resources>

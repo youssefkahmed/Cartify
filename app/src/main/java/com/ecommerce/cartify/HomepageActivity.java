@@ -3,6 +3,7 @@ package com.ecommerce.cartify;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,7 @@ public class HomepageActivity extends AppCompatActivity {
 
     FrameLayout homepageFrame;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +28,7 @@ public class HomepageActivity extends AppCompatActivity {
         // Navigate to Home Fragment initially
         getSupportFragmentManager().beginTransaction().replace(R.id.homepage_frame, new HomeFrag())
                 .commit();
+        updateIconColors("Home");
 
         // Grabbing View Items
         homepageFrame = (FrameLayout)findViewById(R.id.homepage_frame);
@@ -81,6 +84,7 @@ public class HomepageActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void updateIconColors(String type){
         Button homeBtn = (Button)findViewById(R.id.home_btn);

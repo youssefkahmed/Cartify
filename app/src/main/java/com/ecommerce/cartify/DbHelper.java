@@ -1,5 +1,6 @@
 package com.ecommerce.cartify;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,9 +11,12 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.ecommerce.cartify.Helpers.GmailSender;
+import com.ecommerce.cartify.Helpers.SendMailTask;
 import com.ecommerce.cartify.Models.Customer;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -35,12 +39,12 @@ public class DbHelper extends SQLiteOpenHelper {
                           "cat_name TEXT NOT NULL)";
 
         String ordTable = "CREATE TABLE orders(ord_id INTEGER PRIMARY KEY, ord_date DATE NOT NULL, " +
-                          "cust_id INTEGER NOT NULL, address TEXT NOT NULL, " +
+                          "cust_id INTEGER NOT NULL, address TEXT NOT NULL, total_price INTEGER NOT NULL, " +
                           "FOREIGN KEY(cust_id) REFERENCES customers(cust_id))";
 
         String prodTable = "CREATE TABLE products(prod_id INTEGER PRIMARY KEY, prod_name TEXT NOT NULL, " +
-                           "price INTEGER NOT NULL, quantity INTEGER NOT NULL, cat_id INTEGER NOT NULL, " +
-                           "FOREIGN KEY(cat_id) REFERENCES categories(cat_id))";
+                           "price INTEGER NOT NULL, quantity INTEGER NOT NULL, seller TEXT NOT NULL, image_url TEXT NOT NULL, " +
+                           "cat_id INTEGER NOT NULL, FOREIGN KEY(cat_id) REFERENCES categories(cat_id))";
 
         String ordDetTable = "CREATE TABLE order_details(ord_id INTEGER NOT NULL, prod_id INTEGER NOT NULL, " +
                              "quantity INTEGER NOT NULL, PRIMARY KEY(ord_id, prod_id), FOREIGN KEY(ord_id) " +
@@ -64,7 +68,21 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void registerCustomer(Customer customer){
+    public boolean registerCustomer(Customer customer){
+
+        cartifyDB = getReadableDatabase();
+        Cursor cust = cartifyDB.rawQuery("SELECT * FROM customers WHERE username=?",
+                new String[]{customer.getUsername()});
+
+        if(cust.getCount() > 0) {
+            cust.close();
+            cartifyDB.close();
+            return false;
+        }
+
+        cust.close();
+        cartifyDB.close();
+
         ContentValues row = new ContentValues();
         row.put("cust_name", customer.getName());
         row.put("username", customer.getUsername());
@@ -77,6 +95,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cartifyDB = getWritableDatabase();
         cartifyDB.insert("customers", null, row);
         cartifyDB.close();
+        return true;
     }
 
     public boolean checkLogin(String emailOrUsername, String password){
@@ -100,7 +119,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public boolean resetPassword(String custEmail){
+    public boolean resetPassword(String custEmail, Activity context){
         // Check Email validity
         cartifyDB = getReadableDatabase();
         Cursor password = cartifyDB.rawQuery("SELECT password FROM customers WHERE email=?", new String[]{custEmail});
@@ -117,20 +136,26 @@ public class DbHelper extends SQLiteOpenHelper {
         String emailPassword = "Cartifyapp";
         String emailSubject = "Cartify Password";
         String emailBody = "Your password is: " + password.getString(0);
-        try {
-            GmailSender sender = new GmailSender(emailSender, emailPassword);
-            sender.sendMail(
-                    emailSubject,
-                    emailBody,
-                    emailSender,
-                    custEmail);
-        } catch (Exception e) {
-            Log.e("SendMail", e.getMessage(), e);
-        }
+
+        // Remove this later!!!
+        custEmail = "youssefkahmed@gmail.com";
+        List<String> recipients = new ArrayList<>();
+        recipients.add(custEmail);
+
+        new SendMailTask(context).execute(emailSender,
+                emailPassword, recipients, emailSubject, emailBody);
 
         password.close();
         cartifyDB.close();
         return true;
+    }
+
+    public Cursor getOffers(){
+        //cartifyDB = getReadableDatabase();
+        Cursor offers = cartifyDB.rawQuery("SELECT prod_name, image_url FROM products LIMIT 5", null);
+        offers.moveToFirst();
+        cartifyDB.close();
+        return offers;
     }
 
 }

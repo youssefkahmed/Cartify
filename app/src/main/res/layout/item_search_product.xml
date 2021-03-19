@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/search_product_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="100dp">
+
+    <!-- Product Image -->
+    <ImageView
+        android:id="@+id/search_product_image"
+        android:layout_width="@dimen/search_product_image_width"
+        android:layout_height="@dimen/search_product_image_height"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_centerVertical="true"
+        android:scaleType="fitXY"
+        />
+
+   <!-- Product Name -->
+    <TextView
+        android:id="@+id/search_product_name"
+        android:layout_width="@dimen/search_product_image_width"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/search_product_image"
+        android:layout_toEndOf="@+id/search_product_image"
+        android:layout_alignTop="@+id/search_product_image"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="7dp"
+        android:text="PLACEHOLDER"
+        android:textSize="18sp"
+        />
+
+    <!-- Product Price -->
+    <TextView
+        android:id="@+id/search_product_seller"
+        android:layout_width="@dimen/search_product_image_width"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/search_product_image"
+        android:layout_toEndOf="@+id/search_product_image"
+        android:layout_below="@+id/search_product_name"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="2dp"
+        android:text="PLACEHOLDER"
+        android:textColor="#e18417"
+        android:textSize="14sp"
+        />
+
+    <!-- Hot Deal Price -->
+    <TextView
+        android:id="@+id/search_product_price"
+        android:layout_width="@dimen/search_product_image_width"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/search_product_image"
+        android:layout_toEndOf="@+id/search_product_image"
+        android:layout_below="@+id/search_product_seller"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:text="PLACEHOLDER"
+        android:textSize="14sp"
+        />
+</RelativeLayout>
+
+

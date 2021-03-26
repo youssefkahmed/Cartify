@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.ecommerce.cartify.R;
 
+// TODO Implement Profile Page
 public class ProfileFrag extends Fragment {
     @Nullable
     @Override

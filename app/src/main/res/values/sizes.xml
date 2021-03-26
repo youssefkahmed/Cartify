@@ -27,4 +27,8 @@
     <dimen name="product_image_height">250dp</dimen>
     <dimen name="product_image_width">250dp</dimen>
 
+    <!-- Sizes for Cart Items Images -->
+    <dimen name="cart_item_image_height">100dp</dimen>
+    <dimen name="cart_item_image_width">100dp</dimen>
+
 </resources>

@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String username = usernameTxt.getText().toString();
+                String username = usernameTxt.getText().toString().toLowerCase();
                 String password =  passwordTxt.getText().toString();
 
                 checkLogin(username, password);

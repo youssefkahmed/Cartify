@@ -33,7 +33,7 @@
         android:textSize="18sp"
         />
 
-    <!-- Product Price -->
+    <!-- Product Seller -->
     <TextView
         android:id="@+id/search_product_seller"
         android:layout_width="@dimen/search_product_image_width"
@@ -49,7 +49,7 @@
         android:textSize="14sp"
         />
 
-    <!-- Hot Deal Price -->
+    <!-- Product Price -->
     <TextView
         android:id="@+id/search_product_price"
         android:layout_width="@dimen/search_product_image_width"

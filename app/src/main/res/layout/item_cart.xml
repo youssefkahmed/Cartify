@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cart_item_parent"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:elevation="100dp">
+
+    <!-- Product Image -->
+    <ImageView
+        android:id="@+id/cart_item_image"
+        android:layout_width="@dimen/cart_item_image_width"
+        android:layout_height="@dimen/cart_item_image_height"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_centerVertical="true"
+        android:scaleType="fitXY"
+        />
+
+    <!-- Product Name -->
+    <TextView
+        android:id="@+id/cart_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/cart_item_image"
+        android:layout_toEndOf="@+id/cart_item_image"
+        android:layout_alignTop="@+id/cart_item_image"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="7dp"
+        android:text="PLACEHOLDER"
+        android:textSize="18sp"
+        />
+
+    <!-- Product Seller -->
+    <TextView
+        android:id="@+id/cart_item_seller"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/cart_item_image"
+        android:layout_toEndOf="@+id/cart_item_image"
+        android:layout_below="@+id/cart_item_name"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="2dp"
+        android:text="PLACEHOLDER"
+        android:textColor="#e18417"
+        android:textSize="14sp"
+        />
+
+    <!-- Product Price -->
+    <TextView
+        android:id="@+id/cart_item_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/cart_item_image"
+        android:layout_toEndOf="@+id/cart_item_image"
+        android:layout_below="@+id/cart_item_seller"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:text="PLACEHOLDER"
+        android:textSize="14sp"
+        />
+
+    <!-- Cross Button -->
+    <Button
+        android:id="@+id/cart_item_cross_btn"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="#E18417"
+        android:text="X"
+        android:fontFamily="@font/gtwalsheimpro_black"
+        >
+    </Button>
+
+    <!-- Increase Quantity Button -->
+    <Button
+        android:id="@+id/cart_item_plus_btn"
+        android:layout_width="23dp"
+        android:layout_height="18dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="#E18417"
+        android:text="+"
+        android:fontFamily="@font/gtwalsheimpro_black"
+        >
+    </Button>
+
+
+    <!-- Quantity Text -->
+    <TextView
+        android:id="@+id/cart_item_quantity"
+        android:layout_width="25dp"
+        android:layout_height="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toLeftOf="@+id/cart_item_plus_btn"
+        android:layout_toStartOf="@+id/cart_item_plus_btn"
+        android:textSize="16sp"
+        android:text="1"
+        android:textColor="#E18417"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
+        >
+    </TextView>
+
+    <!-- Decrease Quantity Button -->
+    <Button
+        android:id="@+id/cart_item_minus_btn"
+        android:layout_width="23dp"
+        android:layout_height="18dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toLeftOf="@+id/cart_item_quantity"
+        android:layout_toStartOf="@+id/cart_item_quantity"
+        android:background="#E18417"
+        android:text="-"
+        android:fontFamily="@font/gtwalsheimpro_black"
+        >
+    </Button>
+</RelativeLayout>
+
+

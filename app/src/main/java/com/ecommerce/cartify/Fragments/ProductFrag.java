@@ -19,6 +19,7 @@ import com.ecommerce.cartify.Models.Product;
 import com.ecommerce.cartify.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -61,7 +62,13 @@ public class ProductFrag extends Fragment {
         addToCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "ADDED TO CART", Toast.LENGTH_SHORT).show();
+                String username = getActivity().getIntent().getStringExtra("username");
+
+                DatabaseReference carts = FirebaseDatabase.getInstance()
+                        .getReference("carts");
+
+                carts.child(username).child(String.valueOf(productId)).setValue(1);
+                Toast.makeText(getContext(), "Item Added Successfully To Cart!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -69,7 +76,13 @@ public class ProductFrag extends Fragment {
         addToWishlistBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "ADDED TO WISHLIST", Toast.LENGTH_SHORT).show();
+                String username = getActivity().getIntent().getStringExtra("username");
+
+                DatabaseReference wishLists = FirebaseDatabase.getInstance()
+                        .getReference("wishlists");
+
+                wishLists.child(username).child(String.valueOf(productId)).setValue(productName.getText().toString());
+                Toast.makeText(getContext(), "Item Added Successfully To Wishlist!", Toast.LENGTH_SHORT).show();
             }
         });
 

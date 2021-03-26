@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Cartify</string>
     <string name="cartify_"> cartify.</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

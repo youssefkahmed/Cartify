@@ -19,12 +19,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ecommerce.cartify.Helpers.FirebaseHelper;
+import com.ecommerce.cartify.Helpers.SendMailTask;
 import com.ecommerce.cartify.Models.Customer;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,16 +56,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Checking Shared Preferences for any saved username & password
-        /*SharedPreferences mPref = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences mPref = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         String username = mPref.getString(PREF_USERNAME, null);
         String password = mPref.getString(PREF_PASSWORD, null);
 
-        if (username == null || password == null) {
+        // If a username and password exist in Preferences File
+        // log the user in automatically
+        if (username != null && password != null) {
             Intent i = new Intent(getApplicationContext(), HomepageActivity.class);
             i.putExtra("username", username);
             finish();
             startActivity(i);
-        }*/
+        }
 
         // Grabbing View Items
         usernameTxt = (EditText)findViewById(R.id.login_username_txt);
@@ -96,11 +103,16 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                String custEmail = ((EditText)builderView.findViewById(R.id.forgotPass_email_txt)).getText().toString();
-                                boolean result = dbHelper.resetPassword(custEmail, MainActivity.this);
+                                // Get Email from ForgotPassView
+                                String custEmail = ((EditText)builderView
+                                        .findViewById(R.id.forgotPass_email_txt))
+                                        .getText().toString();
+                                // Check if email exists in Database
+                                //boolean result = dbHelper.resetPassword(custEmail, MainActivity.this);
+                                resetPassword(custEmail);
 
-                                if(!result)
-                                    Toast.makeText(getApplicationContext(), "Invalid Email", Toast.LENGTH_SHORT).show();
+//                                if(!result)
+//                                    Toast.makeText(getApplicationContext(), "Invalid Email", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -125,7 +137,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // Helper Functions
+    // ========= Helper Functions ============ //
+
+    // Checking if the customer entered a correct email/password combo
     public void checkLogin(String username, String password){
 
         // Adding loading bar
@@ -181,4 +195,72 @@ public class MainActivity extends AppCompatActivity {
 
         });
     }
+
+    // Checking if the customer entered a correct email for resetting their password
+    public void resetPassword(String custEmail){
+        // Adding loading bar
+        ProgressDialog loadingBar = new ProgressDialog(MainActivity.this);
+        loadingBar.setTitle("Checking Email...");
+        loadingBar.setMessage("Please wait while your email is being validated.");
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.show();
+
+        // Generating query
+        Query query = FirebaseDatabase.getInstance()
+                .getReference("customers")
+                .orderByChild("email")
+                .equalTo(custEmail)
+                .limitToFirst(1);
+
+        // Calling query to check if Customer's email exists in DB
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Customer customer = null;
+                for(DataSnapshot postSnapshot : snapshot.getChildren()){
+                    if (postSnapshot != null) {
+                        customer = postSnapshot.getValue(Customer.class);
+                        break;
+                    }
+                }
+
+                if(customer == null){
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "Please enter a valid email.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                loadingBar.dismiss();
+                // Send Email
+                String emailSender = "cartify.ecommerce.app@gmail.com";
+                String emailPassword = "Cartifyapp";
+                String emailSubject = "Cartify Password";
+                String emailBody = "Your password is: " + customer.getPassword();
+
+                // Adding Customer to Recipients List
+                List<String> recipients = new ArrayList<>();
+                recipients.add(custEmail);
+
+                // Sending email
+                new  SendMailTask(MainActivity.this)
+                        .execute(emailSender, emailPassword, recipients, emailSubject, emailBody);
+
+                // Confirming email sent
+                Toast.makeText(getApplicationContext(),
+                        "Please check your email",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+    }
+
+
 }

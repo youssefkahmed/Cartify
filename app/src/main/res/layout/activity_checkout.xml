@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     android:background="@drawable/background"
     tools:context=".CheckoutActivity">
 
@@ -147,7 +148,7 @@
     <EditText
         android:id="@+id/address_txt"
         android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_toRightOf="@+id/address_label"
         android:layout_toEndOf="@+id/address_label"
         android:layout_below="@+id/checkout_date_txt"
@@ -158,6 +159,9 @@
         android:text="loading..."
         android:textColor="#E18417"
         android:textSize="22sp"
+        android:maxWidth="250dp"
+        android:gravity="left"
+        android:inputType="text"
         />
 
     <!-- Location-Picker Button -->
@@ -207,7 +211,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/total_sum_txt"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="120dp"
         android:background="@drawable/rounded_button"
         android:elevation="40sp"
         android:text="SUBMIT ORDER"

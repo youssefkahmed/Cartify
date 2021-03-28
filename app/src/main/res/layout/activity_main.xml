@@ -18,35 +18,40 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
+        <!-- App Banner -->
         <ImageView
             android:id="@+id/ellipse"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ellipse_1" />
 
+        <!-- Cartify Name -->
         <TextView
             android:id="@+id/cartify_"
             android:layout_width="248.92dp"
             android:layout_height="70dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="82.97dp"
+            android:layout_marginLeft="120dp"
             android:layout_marginTop="75.57dp"
             android:fontFamily="@font/rum_raisin"
             android:gravity="center_horizontal|top"
             android:text="@string/cartify_"
             android:textAppearance="@style/cartify_" />
 
+        <!-- Cartify Logo -->
         <ImageView
-            android:id="@+id/caritfy_logo"
+            android:id="@+id/cartify_banner_logo"
             android:layout_width="182.35dp"
             android:layout_height="139.33dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="116dp"
+            android:layout_marginLeft="150dp"
             android:layout_marginTop="-24dp"
             app:srcCompat="@drawable/cartify_logo" />
 
+
+        <!--==================================================-->
+
+        <!-- Welcome Back Text -->
         <TextView
             android:id="@+id/welcome_text"
             android:layout_width="265dp"
@@ -54,14 +59,15 @@
             android:layout_below="@+id/ellipse"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginStart="86dp"
-            android:layout_marginLeft="86dp"
+            android:layout_marginStart="120dp"
+            android:layout_marginLeft="120dp"
             android:layout_marginTop="27dp"
             android:fontFamily="@font/gtwalsheimpro_regular"
             android:text="Welcome back!"
             android:textColor="#FFFFFF"
             android:textSize="36sp" />
 
+        <!-- Register Now Text -->
         <TextView
             android:id="@+id/welcome_text_2"
             android:layout_width="wrap_content"
@@ -69,29 +75,17 @@
             android:layout_below="@+id/welcome_text"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginStart="100dp"
-            android:layout_marginLeft="100dp"
+            android:layout_marginStart="134dp"
+            android:layout_marginLeft="134dp"
             android:layout_marginTop="13dp"
             android:fontFamily="@font/gtwalsheimpro_regular"
             android:text="New here? Register now!"
             android:textColor="#E18417"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/dont_have_an_account_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/remember_me_checkBox"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="113dp"
-            android:layout_marginLeft="113dp"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/gtwalsheimpro_regular"
-            android:text="Don't have an account?"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+        <!--==================================================-->
 
+        <!-- Forgot Password Text -->
         <TextView
             android:id="@+id/forgot_pwd_txt"
             android:layout_width="wrap_content"
@@ -99,8 +93,8 @@
             android:layout_below="@+id/login_password_txt"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginStart="208dp"
-            android:layout_marginLeft="208dp"
+            android:layout_marginStart="260dp"
+            android:layout_marginLeft="260dp"
             android:layout_marginTop="12dp"
             android:fontFamily="@font/gtwalsheimpro_regular"
             android:text="FORGOT PASSWORD?"
@@ -108,15 +102,26 @@
             android:textSize="15sp"
             android:textStyle="bold" />
 
+        <!-- Don't have an account? Text-->
+        <TextView
+            android:id="@+id/dont_have_an_account_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/remember_me_checkBox"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:fontFamily="@font/gtwalsheimpro_regular"
+            android:text="Don't have an account?"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+        <!-- REGISTER Text -->
         <TextView
             android:id="@+id/register_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/dont_have_an_account_txt"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="180dp"
-            android:layout_marginLeft="180dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="4dp"
             android:clickable="true"
             android:fontFamily="@font/gtwalsheimpro_regular"
@@ -125,6 +130,9 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <!--==================================================-->
+
+        <!-- Username EditText -->
         <EditText
             android:id="@+id/login_username_txt"
             android:layout_width="wrap_content"
@@ -146,6 +154,7 @@
             android:textColor="#FF9800"
             android:textSize="24sp" />
 
+        <!-- Password EditText -->
         <EditText
             android:id="@+id/login_password_txt"
             android:layout_width="wrap_content"
@@ -167,17 +176,15 @@
             android:textColor="#FF9800"
             android:textSize="24sp" />
 
+        <!-- Login Button -->
         <Button
             android:id="@+id/login_btn"
             android:layout_width="185dp"
             android:layout_height="58dp"
             android:layout_below="@+id/forgot_pwd_txt"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="125dp"
-            android:layout_marginLeft="125dp"
-            android:layout_marginTop="15dp"
-            android:background="#E18417"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="55dp"
+            android:background="@drawable/rounded_button"
             android:fontFamily="@font/gtwalsheimpro_black"
             android:shadowColor="#00121212"
             android:shadowRadius="0"
@@ -185,42 +192,39 @@
             android:textColor="#FFFFFF"
             android:textSize="24sp"/>
 
-        <TextView
-            android:id="@+id/contact_info"
-            android:layout_width="174dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="139dp"
-            android:layout_marginLeft="139dp"
-            android:layout_marginBottom="50dp"
-            android:text="ABOUT          CONTACT US" />
-
-        <TextView
-            android:id="@+id/copyright_txt"
-            android:layout_width="174dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="139dp"
-            android:layout_marginLeft="139dp"
-            android:layout_marginBottom="21dp"
-            android:text="Copyright 2020 Cartify, Inc" />
-
+        <!-- Remember Me Checkbox -->
         <CheckBox
             android:id="@+id/remember_me_checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/login_btn"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="149dp"
-            android:layout_marginLeft="149dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/gtwalsheimpro_regular"
             android:text="Remember Me?" />
+
+
+        <!--==================================================-->
+
+        <!-- Contact Info Text-->
+        <TextView
+            android:id="@+id/contact_info"
+            android:layout_width="174dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp"
+            android:layout_centerHorizontal="true"
+            android:text="ABOUT          CONTACT US" />
+
+        <!-- Copyright Text -->
+        <TextView
+            android:id="@+id/copyright_txt"
+            android:layout_width="174dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="21dp"
+            android:layout_centerHorizontal="true"
+            android:text="Copyright 2020 Cartify, Inc" />
 
     </RelativeLayout>
 

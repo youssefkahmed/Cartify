@@ -4,6 +4,7 @@
     android:id="@+id/category_parent"
     android:layout_width="160dp"
     android:layout_height="wrap_content"
+    android:padding="5dp"
     android:elevation="100dp">
 
     <!-- Category Image -->
@@ -12,6 +13,8 @@
         android:layout_width="@dimen/category_image_width"
         android:layout_height="@dimen/category_image_height"
         android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/round_image_outline"
         android:scaleType="fitXY"/>
 
     <!-- Category Name -->
@@ -20,11 +23,14 @@
         android:layout_width="@dimen/category_image_width"
         android:layout_height="20dp"
         android:layout_below="@+id/category_image"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="5dp"
         android:text="PLACEHOLDER"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:gravity="center"
+        />
 
 </RelativeLayout>
 

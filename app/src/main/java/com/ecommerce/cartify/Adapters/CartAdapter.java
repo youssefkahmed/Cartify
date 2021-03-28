@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +75,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 .error(R.mipmap.ic_launcher)
                 .into(holder.cartItemImage);
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            holder.cartItemImage.setClipToOutline(true);
+
         // Setting Cart Item Info Text Fields
         holder.cartItemName.setText(mCartItems.get(position).getProd_name());
         holder.cartItemSeller.setText(mCartItems.get(position).getSeller());
@@ -113,7 +117,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                         .setMessage("Do you really want to remove this item from your cart?")
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // Adding loading bar
                                 ProgressDialog loadingBar = new ProgressDialog(mContext);
@@ -165,6 +168,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
                 holder.cartItemQantity.setText(String.valueOf(currentQuantity + 1));
                 mCartItemQuantities.set(position, currentQuantity + 1);
+
+                FirebaseDatabase.getInstance()
+                        .getReference("carts")
+                        .child(mUsername)
+                        .child(String.valueOf(mCartItems.get(position).getProd_id()))
+                        .setValue(mCartItemQuantities.get(position));
             }
         });
 
@@ -181,6 +190,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
                 holder.cartItemQantity.setText(String.valueOf(currentQuantity - 1));
                 mCartItemQuantities.set(position, currentQuantity - 1);
+
+                FirebaseDatabase.getInstance()
+                        .getReference("carts")
+                        .child(mUsername)
+                        .child(String.valueOf(mCartItems.get(position).getProd_id()))
+                        .setValue(mCartItemQuantities.get(position));
             }
         });
 

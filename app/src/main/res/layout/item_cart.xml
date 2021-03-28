@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cart_item_parent"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="@dimen/cart_item_image_height"
+    android:padding="10dp"
     android:elevation="100dp">
 
     <!-- Product Image -->
@@ -16,6 +17,7 @@
         android:layout_marginStart="15dp"
         android:layout_centerVertical="true"
         android:scaleType="fitXY"
+        android:background="@drawable/round_image_outline"
         />
 
     <!-- Product Name -->
@@ -30,7 +32,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="7dp"
         android:text="PLACEHOLDER"
-        android:textSize="18sp"
+        android:textSize="24sp"
         />
 
     <!-- Product Seller -->
@@ -46,7 +48,7 @@
         android:layout_marginTop="2dp"
         android:text="PLACEHOLDER"
         android:textColor="#e18417"
-        android:textSize="14sp"
+        android:textSize="20sp"
         />
 
     <!-- Product Price -->
@@ -61,14 +63,14 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="5dp"
         android:text="PLACEHOLDER"
-        android:textSize="14sp"
+        android:textSize="18sp"
         />
 
     <!-- Cross Button -->
     <Button
         android:id="@+id/cart_item_cross_btn"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="5dp"
@@ -83,16 +85,17 @@
     <!-- Increase Quantity Button -->
     <Button
         android:id="@+id/cart_item_plus_btn"
-        android:layout_width="23dp"
-        android:layout_height="18dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="10dp"
-        android:background="#E18417"
+        android:background="@drawable/circle_button"
         android:text="+"
+        android:textSize="30sp"
         android:fontFamily="@font/gtwalsheimpro_black"
         >
     </Button>
@@ -101,16 +104,15 @@
     <!-- Quantity Text -->
     <TextView
         android:id="@+id/cart_item_quantity"
-        android:layout_width="25dp"
-        android:layout_height="20dp"
-        android:layout_alignParentBottom="true"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="10dp"
+        android:layout_alignTop="@+id/cart_item_plus_btn"
         android:layout_toLeftOf="@+id/cart_item_plus_btn"
         android:layout_toStartOf="@+id/cart_item_plus_btn"
-        android:textSize="16sp"
         android:text="1"
+        android:textSize="30sp"
         android:textColor="#E18417"
         android:textAlignment="center"
         android:gravity="center_horizontal"
@@ -120,16 +122,17 @@
     <!-- Decrease Quantity Button -->
     <Button
         android:id="@+id/cart_item_minus_btn"
-        android:layout_width="23dp"
-        android:layout_height="18dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="10dp"
         android:layout_toLeftOf="@+id/cart_item_quantity"
         android:layout_toStartOf="@+id/cart_item_quantity"
-        android:background="#E18417"
+        android:background="@drawable/circle_button"
         android:text="-"
+        android:textSize="30sp"
         android:fontFamily="@font/gtwalsheimpro_black"
         >
     </Button>

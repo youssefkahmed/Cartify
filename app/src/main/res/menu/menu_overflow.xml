@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/voice_btn"
+        android:title="Voice Search">
+    </item>
+
+    <item
+        android:id="@+id/scan_barcode_btn"
+        android:title="Scan Barcode">
+    </item>
+</menu>

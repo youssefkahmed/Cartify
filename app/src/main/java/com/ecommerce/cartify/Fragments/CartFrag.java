@@ -2,6 +2,7 @@ package com.ecommerce.cartify.Fragments;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -39,12 +40,14 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class CartFrag extends Fragment {
 
     View view;
     String username;
     CartAdapter cartAdapter;
+    Context mContext;
 
     // View Items
     RecyclerView cartItemsRV;
@@ -84,6 +87,14 @@ public class CartFrag extends Fragment {
         checkoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(cartItems.size() == 0){
+                    checkoutBtn.setVisibility(View.INVISIBLE);
+                    clearCartBtn.setVisibility(View.INVISIBLE);
+                    Toast.makeText(getContext(), "Cart is empty!", Toast.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+
                 int numOfTotalItems = 0;
                 int totalSum = 0;
                 for(int i = 0; i < cartItemQuantities.size(); i++){
@@ -156,9 +167,24 @@ public class CartFrag extends Fragment {
             }
         });
 
-        // Getting Items inside Cart
-        getCartItems();
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Getting Items inside Cart
+        try {
+            getCartItems();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 
     private void getCartItems(){
@@ -215,14 +241,16 @@ public class CartFrag extends Fragment {
                         cartItems.add(product);
                     }
 
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                    FragmentManager fragmentManager = Objects.requireNonNull(getActivity())
+//                            .getSupportFragmentManager();
 
                     cartAdapter = new CartAdapter(getContext(), username, cartItems,
-                            cartItemQuantities, fragmentManager);
+                            cartItemQuantities, getFragmentManager());
 
                     cartItemsRV.setAdapter(cartAdapter);
                     cartItemsRV.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
+                    DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                            mContext, LinearLayoutManager.VERTICAL);
                     cartItemsRV.addItemDecoration(dividerItemDecoration);
 
                     if(cartItems.size() != 0) {

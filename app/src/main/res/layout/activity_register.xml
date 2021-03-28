@@ -18,66 +18,37 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
+        <!-- App Banner -->
         <ImageView
             android:id="@+id/ellipse"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ellipse_1" />
 
+        <!-- Cartify Name -->
         <TextView
             android:id="@+id/cartify_"
             android:layout_width="248.92dp"
             android:layout_height="70dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="82.97dp"
+            android:layout_marginLeft="120dp"
             android:layout_marginTop="75.57dp"
             android:fontFamily="@font/rum_raisin"
             android:gravity="center_horizontal|top"
             android:text="@string/cartify_"
             android:textAppearance="@style/cartify_" />
 
+        <!-- Cartify Logo -->
         <ImageView
-            android:id="@+id/caritfy_logo"
+            android:id="@+id/cartify_banner_logo"
             android:layout_width="182.35dp"
             android:layout_height="139.33dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="116dp"
+            android:layout_marginLeft="150dp"
             android:layout_marginTop="-24dp"
             app:srcCompat="@drawable/cartify_logo" />
 
-        <TextView
-            android:id="@+id/dont_have_an_account_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/register_btn"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="114dp"
-            android:layout_marginLeft="114dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/gtwalsheimpro_regular"
-            android:text="Already have an account?"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/login_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/dont_have_an_account_txt"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="203dp"
-            android:layout_marginLeft="203dp"
-            android:layout_marginTop="5dp"
-            android:clickable="true"
-            android:fontFamily="@font/gtwalsheimpro_regular"
-            android:text="LOGIN"
-            android:textColor="#E18417"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+        <!--==================================================-->
 
         <EditText
             android:id="@+id/name_txt"
@@ -123,6 +94,7 @@
             android:textColorLink="#FFFFFF"
             android:textSize="24sp" />
 
+        <!-- Birthdate Button -->
         <EditText
             android:id="@+id/birthdate_txt"
             android:layout_width="wrap_content"
@@ -143,6 +115,33 @@
             android:inputType="none"
             android:textColor="#FF9800"
             android:textSize="24sp" />
+
+        <RadioGroup
+            android:id="@+id/gender_radio_group"
+            android:layout_width="200dp"
+            android:layout_height="43dp"
+            android:layout_below="@+id/birthdate_txt"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="120dp"
+            android:layout_marginLeft="120dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/male_radio_btn"
+                android:layout_width="94dp"
+                android:layout_height="wrap_content"
+                android:text="Male"
+                android:textSize="22sp" />
+
+            <RadioButton
+                android:id="@+id/female_radio_btn"
+                android:layout_width="118dp"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:textSize="22sp" />
+        </RadioGroup>
 
         <EditText
             android:id="@+id/job_txt"
@@ -207,48 +206,51 @@
             android:textColor="#FF9800"
             android:textSize="24sp" />
 
+        <!--==================================================-->
+
+        <!-- REGISTER Button-->
         <Button
             android:id="@+id/register_btn"
             android:layout_width="185dp"
             android:layout_height="58dp"
             android:layout_below="@+id/job_txt"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="136dp"
-            android:layout_marginLeft="136dp"
-            android:layout_marginTop="15dp"
-            android:background="#E18417"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="55dp"
+            android:background="@drawable/rounded_button"
             android:fontFamily="@font/gtwalsheimpro_black"
             android:text="REGISTER"
             android:textColor="#FFFFFF"
             android:textSize="24sp" />
 
-        <RadioGroup
-            android:id="@+id/gender_radio_group"
-            android:layout_width="200dp"
-            android:layout_height="43dp"
-            android:layout_below="@+id/birthdate_txt"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="120dp"
-            android:layout_marginLeft="120dp"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal">
+        <!--==================================================-->
 
-            <RadioButton
-                android:id="@+id/male_radio_btn"
-                android:layout_width="94dp"
-                android:layout_height="wrap_content"
-                android:text="Male"
-                android:textSize="22sp" />
+        <!-- Already have an account Text-->
+        <TextView
+            android:id="@+id/dont_have_an_account_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/register_btn"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/gtwalsheimpro_regular"
+            android:text="Already have an account?"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
 
-            <RadioButton
-                android:id="@+id/female_radio_btn"
-                android:layout_width="118dp"
-                android:layout_height="wrap_content"
-                android:text="Female"
-                android:textSize="22sp" />
-        </RadioGroup>
+        <!-- Login Text-->
+        <TextView
+            android:id="@+id/login_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dont_have_an_account_txt"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:clickable="true"
+            android:fontFamily="@font/gtwalsheimpro_regular"
+            android:text="LOGIN"
+            android:textColor="#E18417"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 

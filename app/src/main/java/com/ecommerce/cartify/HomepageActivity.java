@@ -25,18 +25,12 @@ public class HomepageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
 
-        // Navigate to Home Fragment initially
-        getSupportFragmentManager().beginTransaction().replace(R.id.homepage_frame, new HomeFrag())
-                .commit();
-        updateIconColors("Home");
-
         // Grabbing View Items
         homepageFrame = (FrameLayout)findViewById(R.id.homepage_frame);
         Button homeBtn = (Button)findViewById(R.id.home_btn);
         Button cartBtn = (Button)findViewById(R.id.cart_btn);
         Button wishlistBtn = (Button)findViewById(R.id.wishlist_btn);
         Button profileBtn = (Button)findViewById(R.id.profile_btn);
-
 
         // Setting onClick Listeners to navigate between Fragments
             // Navigating to Home Frag
@@ -82,6 +76,12 @@ public class HomepageActivity extends AppCompatActivity {
                 updateIconColors("Profile");
             }
         });
+
+
+        // Navigate to Home Fragment initially
+        getSupportFragmentManager().beginTransaction().replace(R.id.homepage_frame, new HomeFrag())
+                .commit();
+        updateIconColors("Home");
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")

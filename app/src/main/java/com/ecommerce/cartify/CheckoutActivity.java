@@ -2,63 +2,39 @@ package com.ecommerce.cartify;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ecommerce.cartify.Helpers.SendMailTask;
 import com.ecommerce.cartify.Models.Customer;
 import com.ecommerce.cartify.Models.Product;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +48,7 @@ import java.util.Map;
 // TODO Add Cancel button that goes back to HomepageActivity
 
 
-public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class CheckoutActivity extends AppCompatActivity{
 
     // Variables
     String username;
@@ -81,9 +57,6 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
     String checkoutDate;
     String address;
     int totalSum;
-
-    // Google Maps Variables
-    GoogleMap mMap;
 
     // View Items
     TextView uniqueItemsTxt;
@@ -96,7 +69,7 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
     Button submitOrderBtn;
     Button cancelOrderBtn;
 
-    MapView mapView;
+    ProgressDialog loadingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +98,7 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
         addressTxt.setText(address != null ? address : "");
 
         totalSumTxt = (TextView)findViewById(R.id.total_sum_txt);
-        totalSumTxt.setText(String.valueOf(totalSum));
+        totalSumTxt.setText("$" + String.valueOf(totalSum));
 
         locationPickerBtn = (ImageButton) findViewById(R.id.location_picker_btn);
         submitOrderBtn = (Button) findViewById(R.id.submit_order_btn);
@@ -165,86 +138,7 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ProgressDialog loadingBar = new ProgressDialog(CheckoutActivity.this);
-                                loadingBar.setTitle("Submitting...");
-                                loadingBar.setMessage("Please wait while your order is being submitted.");
-                                loadingBar.setCanceledOnTouchOutside(false);
-                                loadingBar.show();
-
-                                // Setting Order ID
-//                                DateFormat df = new SimpleDateFormat("yyMMddHHmmssZ", Locale.getDefault());
-//                                String date = df.format(Calendar.getInstance().getTime());
-
-                                Map<String, Object> order = new HashMap<>();
-                                order.put("num_of_items", numOfUniqueItems);
-                                order.put("quantity_of_items", numOfTotalItems);
-                                order.put("total_sum", totalSum);
-                                order.put("address", address);
-
-                                Task<Void> submitTask = FirebaseDatabase.getInstance()
-                                        .getReference("orders")
-                                        .child(username)
-                                        .push()
-                                        .setValue(order);
-
-                                submitTask.addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        // Emptying User's Cart
-                                        FirebaseDatabase.getInstance()
-                                                .getReference("carts")
-                                                .child(username)
-                                                .removeValue();
-
-                                        Query query = FirebaseDatabase.getInstance().getReference("customers")
-                                                .child(username);
-                                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                Customer customer = snapshot.getValue(Customer.class);
-                                                String custEmail =  customer.getEmail();
-
-                                                // Send Email
-                                                String emailSender = "cartify.ecommerce.app@gmail.com";
-                                                String emailPassword = "Cartifyapp";
-                                                String emailSubject = "Order Details";
-                                                String emailBody = "Your order details:\n" +
-                                                        "Number of items: " + numOfUniqueItems + "\n" +
-                                                        "Total Quantity: " + numOfTotalItems + "\n" +
-                                                        "Address: " + address + "\n" +
-                                                        "Total Sum: " + totalSum + "\n"
-                                                        +"\nThank you for shopping at Cartify!";
-
-                                                List<String> recipients = new ArrayList<>();
-                                                recipients.add(custEmail);
-
-                                                new SendMailTask(CheckoutActivity.this)
-                                                        .execute(emailSender, emailPassword,
-                                                                recipients, emailSubject, emailBody);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-
-                                        loadingBar.dismiss();
-                                        Intent i = new Intent(getApplicationContext(), HomepageActivity.class);
-                                        i.putExtra("username", username);
-                                        finish();
-                                        startActivity(i);
-                                    }
-                                })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                loadingBar.dismiss();
-                                                Toast.makeText(getApplicationContext(),
-                                                        "Connection Error.",Toast.LENGTH_SHORT);
-                                            }
-                                        });
-
+                                SubmitOrder();
                             }
                         })
                         .setNegativeButton(android.R.string.cancel, null)
@@ -257,15 +151,191 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), HomepageActivity.class);
+                i.putExtra("username", username);
                 finish();
                 startActivity(i);
             }
         });
     }
 
+    private void SubmitOrder(){
+        loadingBar = new ProgressDialog(CheckoutActivity.this);
+        loadingBar.setTitle("Submitting...");
+        loadingBar.setMessage("Please wait while your order is being submitted.");
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.show();
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
+        // Setting Order ID
+//                                DateFormat df = new SimpleDateFormat("yyMMddHHmmssZ", Locale.getDefault());
+//                                String date = df.format(Calendar.getInstance().getTime());
 
+        Map<String, Object> order = new HashMap<>();
+        order.put("num_of_items", numOfUniqueItems);
+        order.put("quantity_of_items", numOfTotalItems);
+        order.put("total_sum", totalSum);
+        order.put("address", address);
+
+        Task<Void> submitTask = FirebaseDatabase.getInstance()
+                .getReference("orders")
+                .child(username)
+                .push()
+                .setValue(order);
+
+                // On task completion, decrease ordered products' quantities
+                // and empty cart, then send order details email
+        submitTask.addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                UpdateProductQuantities();
+            }
+        })
+                // Display connection error on failure
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        loadingBar.dismiss();
+                        Toast.makeText(getApplicationContext(),
+                                "Connection Error.",Toast.LENGTH_SHORT);
+                    }
+                });
+    }
+
+    private void UpdateProductQuantities(){
+        // Getting all products in cart
+        Query query = FirebaseDatabase.getInstance()
+                .getReference("carts")
+                .child(username)
+                .orderByKey();
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Getting IDs and ordered quantities of all
+                // products in Customer's cart
+                ArrayList<Integer> productIds = new ArrayList<>();
+                ArrayList<Integer> quantities = new ArrayList<>();
+                for(DataSnapshot postSnapshot : snapshot.getChildren()){
+                    // Getting all product IDs with their ordered quantities
+                    productIds.add(Integer.parseInt(postSnapshot.getKey()));
+                    quantities.add(postSnapshot.getValue(Integer.class));
+                }
+
+                // Looping over the IDs to decrease the quantity
+                // of each product int the DB
+                for(int i = 0; i < productIds.size(); i++){
+                    int productId = productIds.get(i);
+                    int quantity = quantities.get(i);
+                    // Retrieving each product from the DB
+                    Query query = FirebaseDatabase.getInstance()
+                            .getReference("products")
+                            .child(String.valueOf(productId));
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            // (1) Getting the product, changing its quantity
+                            Product product = snapshot.getValue(Product.class);
+                            product.setQuantity(
+                                    product.getQuantity() - quantity
+                            );
+                            // (2) Then updating it in the DB
+                            FirebaseDatabase.getInstance()
+                                    .getReference("products")
+                                    .child(String.valueOf(productId))
+                                    .setValue(product);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "Connection Error",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                // Emptying cart
+                EmptyCart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Connection Error",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void EmptyCart(){
+        // Emptying User's Cart
+        Task<Void> emptyCartTask = FirebaseDatabase.getInstance()
+                .getReference("carts")
+                .child(username)
+                .removeValue();
+
+        // Calling SendOrderDetails Function
+        emptyCartTask.addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                SendOrderDetails();
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(),
+                                "Connection Error.",Toast.LENGTH_SHORT);
+                    }
+                });
+    }
+
+    private void SendOrderDetails(){
+        // Sending order details to customer via email
+        Query query = FirebaseDatabase.getInstance().getReference("customers")
+                .child(username);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Customer customer = snapshot.getValue(Customer.class);
+                assert customer != null;
+                String custEmail =  customer.getEmail();
+
+                // closing ProgressDialog
+                loadingBar.dismiss();
+
+                // Send Email
+                String emailSender = "cartify.ecommerce.app@gmail.com";
+                String emailPassword = "Cartifyapp";
+                String emailSubject = "Order Details";
+                String emailBody = "Your order details:\n" +
+                        "Number of items: " + numOfUniqueItems + "\n" +
+                        "Total Quantity: " + numOfTotalItems + "\n" +
+                        "Address: " + address + "\n" +
+                        "Total Sum: " + totalSum + "\n"
+                        +"\nThank you for shopping at Cartify!";
+
+                List<String> recipients = new ArrayList<>();
+                recipients.add(custEmail);
+
+                new SendMailTask(CheckoutActivity.this)
+                        .execute(emailSender, emailPassword,
+                                recipients, emailSubject, emailBody);
+
+                Intent i = new Intent(getApplicationContext(), HomepageActivity.class);
+                i.putExtra("username", username);
+                finish();
+                startActivity(i);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                loadingBar.dismiss();
+                Toast.makeText(getApplicationContext(),
+                        "Connection Error.",Toast.LENGTH_SHORT);
+            }
+        });
     }
 }

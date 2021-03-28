@@ -91,8 +91,11 @@ public class RegisterActivity extends AppCompatActivity {
         birthdateTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(RegisterActivity.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-                Toast.makeText(getApplicationContext(), "YOOOOO", Toast.LENGTH_LONG).show();
+                new DatePickerDialog(RegisterActivity.this, date,
+                        myCalendar.get(Calendar.YEAR),
+                        myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH))
+                        .show();
             }
         });
 
@@ -125,6 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                finish();
                 startActivity(i);
             }
         });
@@ -152,6 +156,23 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.child(customer.getUsername()).exists()){
+                    boolean emailInUse = false;
+                    for(DataSnapshot postSnapshot : snapshot.getChildren()){
+                        Customer cust = postSnapshot.getValue(Customer.class);
+                        if(cust.getEmail().toLowerCase().equals(customer.getEmail().toLowerCase())){
+                            emailInUse = true;
+                            break;
+                        }
+                    }
+                    if(emailInUse){
+                        loadingBar.dismiss();
+                        Toast.makeText(getApplicationContext(),
+                                "Email Is Already Registered To Another Account",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                        return;
+                    }
+
                     HashMap<String, Object> custMap = new HashMap<>();
 
                     custMap.put("cust_name", customer.getName());

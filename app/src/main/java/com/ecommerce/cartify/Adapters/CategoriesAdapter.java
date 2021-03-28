@@ -1,6 +1,7 @@
 package com.ecommerce.cartify.Adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.ecommerce.cartify.Fragments.SearchFrag;
 import com.ecommerce.cartify.R;
 
 import java.util.ArrayList;
@@ -22,14 +26,15 @@ import java.util.ArrayList;
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoriesViewHolder> {
 
     private Context mContext;
-    private ArrayList<String> mCategoryNames = new ArrayList<>();
-    //private ArrayList<String> mCategoryImages = new ArrayList<>();
+    private ArrayList<String> mCategoryNames;
+    private FragmentManager mFragmentManager;
 
 
-    public CategoriesAdapter(Context mContext, ArrayList<String> mCategoryNames) {
+    public CategoriesAdapter(Context mContext, ArrayList<String> mCategoryNames,
+                             FragmentManager mFragmentManager) {
         this.mContext = mContext;
         this.mCategoryNames = mCategoryNames;
-        //this.mCategoryImages = mCategoryImages;
+        this.mFragmentManager = mFragmentManager;
     }
 
     @NonNull
@@ -40,6 +45,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         return categoriesViewHolder;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull CategoriesViewHolder holder, int position) {
 
@@ -65,13 +71,18 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
                 break;
         }
 
-
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            holder.categoryImage.setClipToOutline(true);
         holder.categoryName.setText(mCategoryNames.get(position));
 
         holder.categoryParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, mCategoryNames.get(position), Toast.LENGTH_SHORT).show();
+                String searchQuery = mCategoryNames.get(position);
+                mFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.homepage_frame, new SearchFrag(searchQuery, true))
+                        .commit();
             }
         });
     }

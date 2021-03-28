@@ -16,12 +16,13 @@
         android:layout_marginStart="15dp"
         android:layout_centerVertical="true"
         android:scaleType="fitXY"
+        android:background="@drawable/round_image_outline"
         />
 
    <!-- Product Name -->
     <TextView
         android:id="@+id/search_product_name"
-        android:layout_width="@dimen/search_product_image_width"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/search_product_image"
         android:layout_toEndOf="@+id/search_product_image"
@@ -30,7 +31,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="7dp"
         android:text="PLACEHOLDER"
-        android:textSize="18sp"
+        android:textSize="24sp"
         />
 
     <!-- Product Seller -->
@@ -46,7 +47,7 @@
         android:layout_marginTop="2dp"
         android:text="PLACEHOLDER"
         android:textColor="#e18417"
-        android:textSize="14sp"
+        android:textSize="18sp"
         />
 
     <!-- Product Price -->
@@ -61,7 +62,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="5dp"
         android:text="PLACEHOLDER"
-        android:textSize="14sp"
+        android:textSize="18sp"
         />
 </RelativeLayout>
 

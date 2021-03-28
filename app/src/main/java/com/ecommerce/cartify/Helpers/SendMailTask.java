@@ -22,7 +22,11 @@ public class SendMailTask extends AsyncTask {
         statusDialog.setMessage("Getting ready...");
         statusDialog.setIndeterminate(false);
         statusDialog.setCancelable(false);
-        statusDialog.show();
+        try{
+            statusDialog.show();
+        }catch (Exception ex){
+            Log.d("SEND-MAIL", ex.toString());
+        }
     }
 
     @Override
@@ -54,7 +58,11 @@ public class SendMailTask extends AsyncTask {
 
     @Override
     public void onPostExecute(Object result) {
-        statusDialog.dismiss();
+        try{
+            statusDialog.dismiss();
+        }catch(IllegalArgumentException ex){
+            Log.d("EMAIL", ex.toString());
+        }
     }
 
 }

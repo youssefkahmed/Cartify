@@ -1,6 +1,7 @@
 package com.ecommerce.cartify.Adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,9 @@ public class HotDealsAdapter extends RecyclerView.Adapter<HotDealsAdapter.HotDea
                 .load(mHotDeals.get(position).getImage_url())
                 .error(R.mipmap.ic_launcher)
                 .into(holder.hotDealImage);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            holder.hotDealImage.setClipToOutline(true);
 
         holder.hotDealName.setText(mHotDeals.get(position).getProd_name());
         holder.hotDealSeller.setText(mHotDeals.get(position).getSeller());

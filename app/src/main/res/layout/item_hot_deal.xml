@@ -4,6 +4,7 @@
     android:id="@+id/hot_deal_parent"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:paddingLeft="15dp"
     android:elevation="100dp"
     >
 
@@ -13,7 +14,9 @@
         android:layout_width="@dimen/hot_deal_image_width"
         android:layout_height="@dimen/hot_deal_image_height"
         android:layout_marginTop="30dp"
-        android:scaleType="fitXY"/>
+        android:scaleType="fitXY"
+        android:background="@drawable/round_image_outline"
+        />
 
     <!-- Hot Deal Name -->
     <TextView

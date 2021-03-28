@@ -1,6 +1,7 @@
 package com.ecommerce.cartify.Adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,9 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.OffersView
                 .load(mOffers.get(position).getImage_url())
                 .error(R.mipmap.ic_launcher)
                 .into(holder.offerImage);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            holder.offerImage.setClipToOutline(true);
 
         holder.offerName.setText(mOffers.get(position).getProd_name());
 

@@ -1,5 +1,7 @@
 package com.ecommerce.cartify.Fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ public class ProductFrag extends Fragment {
 
     View view;
     int productId;
+    Context mContext;
 
     // View Items
     ImageView productImage;
@@ -68,7 +71,10 @@ public class ProductFrag extends Fragment {
                         .getReference("carts");
 
                 carts.child(username).child(String.valueOf(productId)).setValue(1);
-                Toast.makeText(getContext(), "Item Added Successfully To Cart!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),
+                        "Item Added Successfully To Cart!",
+                        Toast.LENGTH_SHORT)
+                        .show();
             }
         });
 
@@ -91,6 +97,12 @@ public class ProductFrag extends Fragment {
         return view;
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
+
     public void getProduct(){
 
         // Instantiating Query to get Product based on ID
@@ -107,7 +119,7 @@ public class ProductFrag extends Fragment {
                     Product product = postSnapshot.getValue(Product.class);
 
                     // Loading Product Info Into View
-                    Glide.with(getContext())
+                    Glide.with(mContext)
                             .asBitmap()
                             .load(product.getImage_url())
                             .error(R.mipmap.ic_launcher)
@@ -118,13 +130,44 @@ public class ProductFrag extends Fragment {
                     productSeller.setText(product.getSeller());
                     productCategory.setText(product.getCategory());
 
-                    if(product.getQuantity() <= 10) {
+                    if(product.getQuantity() == 0){
+                        productQuantity.setText("Product out of stock!");
+                        productQuantity.setTextColor(Color.parseColor("#F12D2D"));
+                        addToCartBtn.setEnabled(false);
+                    }
+                    else if(product.getQuantity() <= 10) {
                         productQuantity.setText("Only " + String.valueOf(product.getQuantity()) + " left in stock!");
                         productQuantity.setTextColor(Color.parseColor("#F12D2D"));
                     }else{
                         productQuantity.setText(String.valueOf(product.getQuantity()) + " left in stock.");
                         productQuantity.setTextColor(Color.parseColor("#1bce2d"));
                     }
+
+                    // Instantiating Query to check if product is already in cart
+                    Query query = FirebaseDatabase.getInstance()
+                            .getReference("carts")
+                            .child(
+                                    ((Activity)mContext).getIntent()
+                                            .getStringExtra("username"))
+                            .equalTo(String.valueOf(productId));
+
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.getChildrenCount() > 0){
+                                addToCartBtn.setEnabled(false);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(getContext(),
+                                    "Connection Error",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    });
+
                 }
             }
 

@@ -18,4 +18,18 @@
         android:layout_marginTop="339dp"
         android:text="PROFILE"
         android:textSize="30sp" />
+
+    <!-- Logout Button -->
+    <Button
+        android:id="@+id/logout_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_button"
+        android:text="LOGOUT"
+        android:fontFamily="@font/gtwalsheimpro_black"
+        android:textSize="15sp"
+        />
 </RelativeLayout>

@@ -2,6 +2,7 @@ package com.ecommerce.cartify.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,9 @@ public class SearchProductsAdapter extends RecyclerView.Adapter<SearchProductsAd
                 .load(mProducts.get(position).getImage_url())
                 .error(R.mipmap.ic_launcher)
                 .into(holder.productImage);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            holder.productImage.setClipToOutline(true);
 
         // Setting Product Info Text Fields
         holder.productName.setText(mProducts.get(position).getProd_name());
